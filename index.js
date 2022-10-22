@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 import { registerValidation } from './validations/auth.js';
 import { validationResult } from 'express-validator';
 import UserModel from './models/User.js';
+import checkAuth from './utils/checkAuth.js';
 
 mongoose.connect('mongodb+srv://afftar:5208381@cluster0.4vqrrcc.mongodb.net/twitter-clone?retryWrites=true&w=majority')
     .then(() => console.log('DB ok'))
@@ -99,7 +100,26 @@ app.post('/auth/register', registerValidation, async (req, res) => {
     }
 });
 
+app.get('/auth/me', checkAuth, async (req, res) => {
+    try {
+        const user = await UserModel.findById(req.userId);
 
+        if (!user) {
+            return res.status(404).json({
+                message: 'Пользователь не найден',
+            });
+        }
+
+        const { passwordHash, ...userData } = user._doc;
+
+        res.json(userData);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: 'Нет доступа',
+        });
+    }
+});
 
 app.listen(4444, (err) => {
     if (err) {
