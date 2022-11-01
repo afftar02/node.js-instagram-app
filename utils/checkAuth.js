@@ -1,6 +1,6 @@
-import jwt from 'jsonwebtoken';
+const jwt = require('jsonwebtoken');
 
-export default (req, res, next) => {
+const checkAuth = (req, res, next) => {
     const token = (req.headers.authorization || '').replace(/Bearer\s?/, '');
 
     if (token) {
@@ -11,13 +11,15 @@ export default (req, res, next) => {
 
             next();
         } catch (err) {
-            return res.status(403).json({
+            return res.status(401).json({
                 message: 'Access denied',
             });
         }
     } else {
-        return res.status(403).json({
+        return res.status(401).json({
             message: 'Access denied',
         });
     }
 }
+
+module.exports = checkAuth;

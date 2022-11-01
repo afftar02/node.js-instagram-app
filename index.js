@@ -1,22 +1,17 @@
-import express from 'express';
-import mongoose from 'mongoose';
-import cors from 'cors';
-import { registerValidation } from './validations/auth.js';
-import checkAuth from './utils/checkAuth.js';
-import * as UserController from './controllers/UserController.js';
+const express = require('express');
+const router = require('./routes/route');
+const mongoose = require('mongoose');
+const cors = require('cors');
+
+const app = express();
 
 mongoose.connect('mongodb+srv://afftar:5208381@cluster0.4vqrrcc.mongodb.net/twitter-clone?retryWrites=true&w=majority')
     .then(() => console.log('DB ok'))
     .catch((err) => console.log('DB error', err));
 
-const app = express();
-
 app.use(express.json());
 app.use(cors());
-
-app.post('/auth/login', UserController.login);
-app.post('/auth/register', registerValidation, UserController.register);
-app.get('/auth/me', checkAuth, UserController.getMe);
+app.use('/api', router);
 
 app.listen(4444, (err) => {
     if (err) {
