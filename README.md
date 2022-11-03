@@ -1,1 +1,1 @@
-# Backend part of twitter clone web app
+# Backend part of instagram clone web app
