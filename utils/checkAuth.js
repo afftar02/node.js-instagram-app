@@ -7,7 +7,7 @@ const checkAuth = (req, res, next) => {
         try {
             const decoded = jwt.verify(token, 'secret2022');
 
-            req.userId = decoded._id;
+            req.userId = decoded.id;
 
             next();
         } catch (err) {

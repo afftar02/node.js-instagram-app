@@ -1,7 +1,9 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const { validationResult } = require('express-validator');
-const UserModel = require('../models/User.js');
+const { PrismaClient } = require('@prisma/client');
+
+const prisma = new PrismaClient();
 
 const register = async (req, res) => {
     try {
@@ -14,17 +16,18 @@ const register = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(password, salt);
 
-        const doc = new UserModel({
-            email: req.body.email,
-            name: req.body.name,
-            passwordHash: hash,
+        const user = await prisma.user.create({
+            data: {
+                email: req.body.email,
+                hash_password: hash,
+                first_name: req.body.first_name,
+                last_name: req.body.last_name,
+            },
         });
-
-        const user = await doc.save();
 
         const token = jwt.sign(
             {
-                _id: user._id,
+                id: user.id,
             },
             'secret2022',
             {
@@ -32,7 +35,7 @@ const register = async (req, res) => {
             },
         );
 
-        const { passwordHash, ...userData } = user._doc;
+        const { hash_password, ...userData } = user;
 
         res.json({
             ...userData,
@@ -48,7 +51,11 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
     try {
-        const user = await UserModel.findOne({ email: req.body.email });
+        const user = await prisma.user.findUnique({
+            where: {
+                email: req.body.email,
+            },
+        });
 
         if (!user) {
             return res.status(404).json({
@@ -56,7 +63,7 @@ const login = async (req, res) => {
             });
         }
 
-        const isValidPass = await bcrypt.compare(req.body.password, user._doc.passwordHash);
+        const isValidPass = await bcrypt.compare(req.body.password, user.hash_password);
 
         if (!isValidPass) {
             return res.status(400).json({
@@ -66,7 +73,7 @@ const login = async (req, res) => {
 
         const token = jwt.sign(
             {
-                _id: user._id,
+                id: user.id,
             },
             'secret2022',
             {
@@ -74,7 +81,7 @@ const login = async (req, res) => {
             },
         );
 
-        const { passwordHash, ...userData } = user._doc;
+        const { hash_password, ...userData } = user;
 
         res.json({
             ...userData,
@@ -90,7 +97,11 @@ const login = async (req, res) => {
 
 const getMe = async (req, res) => {
     try {
-        const user = await UserModel.findById(req.userId);
+        const user = await prisma.user.findUnique({
+            where: {
+                id: req.userId,
+            }
+        });
 
         if (!user) {
             return res.status(404).json({
@@ -98,7 +109,7 @@ const getMe = async (req, res) => {
             });
         }
 
-        const { passwordHash, ...userData } = user._doc;
+        const { hash_password, ...userData } = user;
 
         res.json(userData);
     } catch (err) {
