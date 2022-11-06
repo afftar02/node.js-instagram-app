@@ -16,4 +16,68 @@ model User {
   hash_password String @db.VarChar(255)
   first_name String @db.VarChar(255)
   last_name String @db.VarChar(255)
+
+  avatar Image? @relation(fields: [avatar_id], references: [id])
+  avatar_id Int? @unique
+
+  posts Post[]
+
+  likedPosts Users_Liked_Posts[]
+
+  comments Comment[]
+}
+
+model Image {
+  id Int @id @default(autoincrement())
+  image_url String @unique @db.Text
+  is_external Boolean @db.Boolean
+
+  user User?
+
+  posts Images_Posts[]
+}
+
+model Post {
+  id Int @id @default(autoincrement())
+  description String @db.Text
+  created_at DateTime @db.Timestamp
+
+  images Images_Posts[]
+
+  user User @relation(fields: [user_id], references: [id])
+  user_id Int
+
+  likedUsers Users_Liked_Posts[]
+
+  comments Comment[]
+}
+
+model Images_Posts {
+  image Image @relation(fields: [image_id], references: [id])
+  image_id Int
+  post Post @relation(fields: [post_id], references: [id])
+  post_id Int
+
+  @@id([image_id, post_id])
+}
+
+model Users_Liked_Posts {
+  user User @relation(fields: [user_id], references: [id])
+  user_id Int
+  post Post @relation(fields: [post_id], references: [id])
+  post_id Int
+
+  @@id([user_id, post_id])
+}
+
+model Comment {
+  id Int @id @default(autoincrement())
+  text String @db.Text
+  created_at DateTime @db.Timestamp
+
+  user User @relation(fields: [user_id], references: [id])
+  user_id Int
+
+  post Post @relation(fields: [post_id], references: [id])
+  post_id Int
 }
