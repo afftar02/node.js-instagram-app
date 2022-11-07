@@ -13,7 +13,7 @@ const register = async (req, res) => {
         }
 
         const password = req.body.password;
-        const salt = await bcrypt.genSalt(10);
+        const salt = await bcrypt.genSalt(Number(process.env.PASSWORD_SALT));
         const hash = await bcrypt.hash(password, salt);
 
         const user = await prisma.user.create({
