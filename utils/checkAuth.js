@@ -5,7 +5,7 @@ const checkAuth = (req, res, next) => {
 
     if (token) {
         try {
-            const decoded = jwt.verify(token, 'secret2022');
+            const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_PRIVATE_KEY);
 
             req.userId = decoded.id;
 
