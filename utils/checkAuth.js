@@ -4,17 +4,17 @@ const checkAuth = (req, res, next) => {
     const token = (req.headers.authorization || '').replace(/Bearer\s?/, '');
 
     if (token) {
-        try {
-            const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_PRIVATE_KEY);
+        const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_PRIVATE_KEY);
 
-            req.userId = decoded.id;
-
-            next();
-        } catch (err) {
+        if (!decoded) {
             return res.status(401).json({
                 message: 'Access denied',
             });
         }
+
+        req.userId = decoded.id;
+
+        next();
     } else {
         return res.status(401).json({
             message: 'Access denied',
