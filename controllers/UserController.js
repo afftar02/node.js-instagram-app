@@ -1,25 +1,22 @@
 const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcrypt');
+const userService = require('..//services/userService');
 
 const prisma = new PrismaClient();
 
 const getUser = async (req, res) => {
     try {
-        const user = await prisma.user.findUnique({
-            where: {
-                id: Number(req.params.id),
-            }
-        });
+        const { success, user } = await userService.getUserById(req.params.id);
 
-        if (!user) {
+        if (success) {
+            const { hash_password, ...userData } = user;
+
+            res.json(userData);
+        } else {
             return res.status(404).json({
                 message: 'User not found',
             });
         }
-
-        const { hash_password, ...userData } = user;
-
-        res.json(userData);
     } catch (err) {
         console.log(err);
         res.status(500).json({
@@ -36,27 +33,9 @@ const updateUser = async (req, res) => {
             });
         }
 
-        const password = req.body.password;
-        let hash;
-        if (password) {
-            const salt = await bcrypt.genSalt(Number(process.env.PASSWORD_SALT));
-            hash = await bcrypt.hash(password, salt);
-        }
+        const { success, updateUser } = await userService.updateUser(req.body, req.userId);
 
-        const updateUser = await prisma.user.update({
-            where: {
-                id: req.userId,
-            },
-            data: {
-                first_name: req.body.first_name,
-                last_name: req.body.last_name,
-                email: req.body.email,
-                hash_password: hash
-                //TODO: add other fields
-            },
-        });
-
-        if (!updateUser) {
+        if (!success) {
             return res.status(404).json({
                 message: 'User not found',
             });
@@ -81,13 +60,9 @@ const deleteUser = async (req, res) => {
             });
         }
 
-        const deleteUser = await prisma.user.delete({
-            where: {
-                id: req.userId,
-            }
-        });
+        const { success, deleteUser } = await userService.deleteUser(req.userId);
 
-        if (!deleteUser) {
+        if (!success) {
             return res.status(404).json({
                 message: 'User not found',
             });

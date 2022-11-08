@@ -1,9 +1,5 @@
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
 const { validationResult } = require('express-validator');
-const { PrismaClient } = require('@prisma/client');
-
-const prisma = new PrismaClient();
+const authService = require('../services/authService');
 
 const register = async (req, res) => {
     try {
@@ -12,40 +8,7 @@ const register = async (req, res) => {
             return res.status(400).json(errors.array());
         }
 
-        const password = req.body.password;
-        const salt = await bcrypt.genSalt(Number(process.env.PASSWORD_SALT));
-        const hash = await bcrypt.hash(password, salt);
-
-        const user = await prisma.user.create({
-            data: {
-                email: req.body.email,
-                hash_password: hash,
-                first_name: req.body.first_name,
-                last_name: req.body.last_name,
-            },
-        });
-
-        const access_token = jwt.sign(
-            {
-                id: user.id,
-            },
-            process.env.ACCESS_TOKEN_PRIVATE_KEY,
-            {
-                expiresIn: '7d',
-            },
-        );
-
-        const refresh_token = jwt.sign(
-            {
-                id: user.id,
-            },
-            process.env.REFRESH_TOKEN_PRIVATE_KEY,
-            {
-                expiresIn: '30d',
-            },
-        );
-
-        const { hash_password, ...userData } = user;
+        const { userData, access_token, refresh_token } = await authService.register(req.body);
 
         res.json({
             ...userData,
@@ -62,53 +25,19 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
     try {
-        const user = await prisma.user.findUnique({
-            where: {
-                email: req.body.email,
-            },
-        });
+        const { success, userData, access_token, refresh_token } = await authService.login(req.body);
 
-        if (!user) {
-            return res.status(404).json({
-                message: 'Incorrect email or password',
+        if (success) {
+            res.json({
+                ...userData,
+                access_token,
+                refresh_token
             });
-        }
-
-        const isValidPass = await bcrypt.compare(req.body.password, user.hash_password);
-
-        if (!isValidPass) {
+        } else {
             return res.status(400).json({
                 message: 'Incorrect email or password',
             });
         }
-
-        const access_token = jwt.sign(
-            {
-                id: user.id,
-            },
-            process.env.ACCESS_TOKEN_PRIVATE_KEY,
-            {
-                expiresIn: '7d',
-            },
-        );
-
-        const refresh_token = jwt.sign(
-            {
-                id: user.id,
-            },
-            process.env.REFRESH_TOKEN_PRIVATE_KEY,
-            {
-                expiresIn: '30d',
-            },
-        );
-
-        const { hash_password, ...userData } = user;
-
-        res.json({
-            ...userData,
-            access_token,
-            refresh_token
-        });
     } catch (err) {
         console.log(err);
         res.status(500).json({
@@ -119,38 +48,17 @@ const login = async (req, res) => {
 
 const refresh = async (req, res) => {
     try {
-        const token = (req.headers.authorization || '').replace(/Bearer\s?/, '');
+        const { success, access_token } = await authService.refresh(req.headers.authorization);
 
-        if (token) {
-            const decoded = jwt.verify(token, process.env.REFRESH_TOKEN_PRIVATE_KEY);
-
-            if (decoded) {
-                req.refreshUserId = decoded.id;
-            } else {
-                return res.status(401).json({
-                    message: 'Access denied',
-                });
-            }
-
+        if (success) {
+            res.json({
+                access_token
+            });
         } else {
             return res.status(401).json({
                 message: 'Access denied',
             });
         }
-
-        const access_token = jwt.sign(
-            {
-                id: req.refreshUserId,
-            },
-            process.env.ACCESS_TOKEN_PRIVATE_KEY,
-            {
-                expiresIn: '7d',
-            },
-        );
-
-        res.json({
-            access_token
-        });
     } catch (err) {
         console.log(err);
         res.status(500).json({
