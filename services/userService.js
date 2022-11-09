@@ -1,47 +1,74 @@
 const userRepository = require('../repositories/userRepository');
+const getHash = require('../helpers/crypt');
 
 const getUserById = async (id) => {
-    let success = true;
-
     const user = await userRepository.findUserById(id);
 
     if (!user) {
-        success = false;
-        return success;
+        throw new Error('User not found');
     } else {
-        return { success, user };
+        return user;
     }
 };
 
-const updateUser = async (body, userId) => {
-    const password = body.password;
-    let hash, success = true;
-    if (password) {
-        const salt = await bcrypt.genSalt(Number(process.env.PASSWORD_SALT));
-        hash = await bcrypt.hash(password, salt);
+const getUserByEmail = async (email) => {
+    const user = await userRepository.findUserByEmail(email);
+
+    if (!user) {
+        throw new Error('User not found');
     }
 
-    const updateUser = await userRepository.updateUser(userId, body, hash);
+    return user;
+};
+
+const createUser = async (body, hash) => {
+    const data = {
+        email: body.email,
+        hashPassword: hash,
+        firstName: body.firstName,
+        lastName: body.lastName,
+    };
+
+    const user = await userRepository.createUser(data);
+
+    if (!user) {
+        throw new Error('Registration error');
+    }
+
+    return user;
+};
+
+const updateCurrentUser = async (body, userId) => {
+    let hash;
+    if (body.password) {
+        hash = await getHash(body.password);
+    }
+
+    const data = {
+        firstName: body.firstName,
+        lastName: body.lastName,
+        email: body.email,
+        hashPassword: hash
+        //TODO: add other fields
+    };
+
+    const updateUser = await userRepository.updateCurrentUser(userId, data);
 
     if (!updateUser) {
-        success = false;
-        return success;
+        throw new Error('User not found');
     }
 
-    return { success, updateUser };
+    return updateUser;
 };
 
-const deleteUser = async (id) => {
-    let success = true;
-
-    const deleteUser = await userRepository.deleteUser(id);
+const deleteCurrentUser = async (userId) => {
+    const deleteUser = await userRepository.deleteCurrentUser(userId);
 
     if (!deleteUser) {
-        success = false;
-        return success;
-    } else {
-        return { success, deleteUser };
+        throw new Error('User not found');
     }
+
+    return deleteUser;
 };
 
-module.exports = { getUserById, updateUser, deleteUser };
+module.exports = { getUserById, getUserByEmail, createUser, updateCurrentUser, deleteCurrentUser };

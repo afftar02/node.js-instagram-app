@@ -1,112 +1,86 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const userRepository = require('../repositories/userRepository');
+const getHash = require('../helpers/crypt');
+const userService = require('./userService');
+
+const accessTokenKey = process.env.ACCESS_TOKEN_PRIVATE_KEY;
+const refreshTokenKey = process.env.REFRESH_TOKEN_PRIVATE_KEY;
+const accessTokenLifetime = process.env.ACCESS_TOKEN_LIFETIME;
+const refreshTokenLifetime = process.env.REFRESH_TOKEN_LIFETIME;
 
 const register = async (body) => {
-    const password = body.password;
-    const salt = await bcrypt.genSalt(Number(process.env.PASSWORD_SALT));
-    const hash = await bcrypt.hash(password, salt);
+    const hash = await getHash(body.password);
 
-    const user = await userRepository.createUser(body, hash);
+    const user = await userService.createUser(body, hash);
 
-    const access_token = jwt.sign(
-        {
-            id: user.id,
-        },
-        process.env.ACCESS_TOKEN_PRIVATE_KEY,
-        {
-            expiresIn: '7d',
-        },
+    const accessToken = jwt.sign(
+        { id: user.id },
+        accessTokenKey,
+        { expiresIn: accessTokenLifetime },
     );
 
-    const refresh_token = jwt.sign(
-        {
-            id: user.id,
-        },
-        process.env.REFRESH_TOKEN_PRIVATE_KEY,
-        {
-            expiresIn: '30d',
-        },
+    const refreshToken = jwt.sign(
+        { id: user.id },
+        refreshTokenKey,
+        { expiresIn: refreshTokenLifetime },
     );
 
-    const { hash_password, ...userData } = user;
-
-    return { userData, access_token, refresh_token };
+    return { accessToken, refreshToken };
 };
 
 const login = async (body) => {
-    let success = true;
-
-    const user = await userRepository.findUserByEmail(body.email);
+    const user = await userService.getUserByEmail(body.email);
 
     if (!user) {
-        success = false;
-        return success;
+        throw new Error('Incorrect email or password');
     }
 
-    const isValidPass = await bcrypt.compare(body.password, user.hash_password);
+    const isValidPass = await bcrypt.compare(body.password, user.hashPassword);
 
     if (!isValidPass) {
-        success = false;
-        return success;
+        throw new Error('Incorrect email or password');
     }
 
-    const access_token = jwt.sign(
-        {
-            id: user.id,
-        },
-        process.env.ACCESS_TOKEN_PRIVATE_KEY,
-        {
-            expiresIn: '7d',
-        },
+    const accessToken = jwt.sign(
+        { id: user.id },
+        accessTokenKey,
+        { expiresIn: accessTokenLifetime },
     );
 
-    const refresh_token = jwt.sign(
-        {
-            id: user.id,
-        },
-        process.env.REFRESH_TOKEN_PRIVATE_KEY,
-        {
-            expiresIn: '30d',
-        },
+    const refreshToken = jwt.sign(
+        { id: user.id },
+        refreshTokenKey,
+        { expiresIn: refreshTokenLifetime },
     );
 
-    const { hash_password, ...userData } = user;
-
-    return { success, userData, access_token, refresh_token };
+    return { accessToken, refreshToken };
 };
 
 const refresh = async (authorization) => {
-    let success = true, refreshUserId;
+    let refreshUserId;
 
     const token = (authorization || '').replace(/Bearer\s?/, '');
 
     if (token) {
-        const decoded = jwt.verify(token, process.env.REFRESH_TOKEN_PRIVATE_KEY);
+        const decoded = jwt.verify(token, refreshTokenKey);
 
         if (decoded) {
             refreshUserId = decoded.id;
         } else {
-            success = false;
-            return success;
+            throw new Error('Token is not valid');
         }
 
     } else {
-        success = false;
-        return success;
+        throw new Error('Token is not valid');
     }
 
-    const access_token = jwt.sign(
-        {
-            id: refreshUserId,
-        },
-        process.env.ACCESS_TOKEN_PRIVATE_KEY,
-        {
-            expiresIn: '7d',
-        },
+    const accessToken = jwt.sign(
+        { id: refreshUserId },
+        accessTokenKey,
+        { expiresIn: accessTokenLifetime },
     );
 
-    return { success, access_token };
+    return accessToken;
 };
 
 module.exports = { register, login, refresh };

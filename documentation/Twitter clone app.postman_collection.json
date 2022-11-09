@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\":\"Holland@gmail.com\",\r\n    \"password\":\"12344321\"\r\n}",
+							"raw": "{\r\n    \"email\":\"Holland@gmail.com\",\r\n    \"password\":\"5208381\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -46,7 +46,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"first_name\":\"Tom\",\r\n    \"last_name\":\"Holland\",\r\n    \"email\":\"Holland@gmail.com\",\r\n    \"password\":\"12344321\"\r\n}",
+							"raw": "{\r\n    \"firstName\":\"Tom\",\r\n    \"lastName\":\"Holland\",\r\n    \"email\":\"Holland@gmail.com\",\r\n    \"password\":\"5208381\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -76,7 +76,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNjY3OTAxMjE3LCJleHAiOjE2NzA0OTMyMTd9.7w0nQRG8ndwD1ydJp718Jz4qaRNvH--phOksErSANqA",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjUsImlhdCI6MTY2Nzk5MzY4MiwiZXhwIjoxNjcwNTg1NjgyfQ.zemp6KoHjhb_ZqRmsjtsN5SznzEEsZTECttt5gonGq8",
 								"type": "text"
 							}
 						],
@@ -105,15 +105,9 @@
 					"name": "Get user",
 					"request": {
 						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNjY3OTAxMjQzLCJleHAiOjE2Njg1MDYwNDN9.afY-ldhUbqn2ljJ_QQUWjuuMU-xy54NAw4Zj9OtXbro",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"url": {
-							"raw": "http://localhost:4444/api/user/4",
+							"raw": "http://localhost:4444/api/user/22",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -122,26 +116,52 @@
 							"path": [
 								"api",
 								"user",
-								"4"
+								"22"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Update user",
+					"name": "Get current user",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjYsImlhdCI6MTY2ODAwNzMzNywiZXhwIjoxNjY4NjEyMTM3fQ.SNSNBrwuO141nubCUKXKJ9j_raDMD1ALEtoKZrjjZHs",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:4444/api/user",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4444",
+							"path": [
+								"api",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update current user",
 					"request": {
 						"method": "PUT",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNjY3OTAxMjQzLCJleHAiOjE2Njg1MDYwNDN9.afY-ldhUbqn2ljJ_QQUWjuuMU-xy54NAw4Zj9OtXbro",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjMsImlhdCI6MTY2Nzk5MjcyNiwiZXhwIjoxNjY4NTk3NTI2fQ.epOBA7w1V_OvW7vgBOZ866LHCHtAENPUiIw2AeN6JjA",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"first_name\":\"Nikita\",\r\n    \"last_name\":\"Steckij\"\r\n}",
+							"raw": "{\r\n    \"email\":\"stets119@gmail.com\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -149,7 +169,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:4444/api/user/4",
+							"raw": "http://localhost:4444/api/user",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -157,26 +177,25 @@
 							"port": "4444",
 							"path": [
 								"api",
-								"user",
-								"4"
+								"user"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Delete user",
+					"name": "Delete current user",
 					"request": {
 						"method": "DELETE",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwiaWF0IjoxNjY3OTAzNzc0LCJleHAiOjE2Njg1MDg1NzR9.rzDnMcidNevYEG1sUZVXjOkZTCH4fU6Q6ymlgy7gR18",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjIsImlhdCI6MTY2Nzk5MTE5MSwiZXhwIjoxNjY4NTk1OTkxfQ.KZg_U19sIqFYrTsynSMuYovZCQD72AuFKem7Fq-K5ps",
 								"type": "text"
 							}
 						],
 						"url": {
-							"raw": "http://localhost:4444/api/user/8",
+							"raw": "http://localhost:4444/api/user",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -184,8 +203,7 @@
 							"port": "4444",
 							"path": [
 								"api",
-								"user",
-								"8"
+								"user"
 							]
 						}
 					},

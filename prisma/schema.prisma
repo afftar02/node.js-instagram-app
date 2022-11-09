@@ -13,71 +13,71 @@ datasource db {
 model User {
   id Int @id @default(autoincrement())
   email String @unique @db.VarChar(255)
-  hash_password String @db.VarChar(255)
-  first_name String @db.VarChar(255)
-  last_name String @db.VarChar(255)
+  hashPassword String @db.VarChar(255)
+  firstName String @db.VarChar(255)
+  lastName String @db.VarChar(255)
 
-  avatar Image? @relation(fields: [avatar_id], references: [id])
-  avatar_id Int? @unique
+  avatar Image? @relation(fields: [avatarId], references: [id])
+  avatarId Int? @unique
 
   posts Post[]
 
-  likedPosts Users_Liked_Posts[]
+  likedPosts UsersLikedPosts[]
 
   comments Comment[]
 }
 
 model Image {
   id Int @id @default(autoincrement())
-  image_url String @unique @db.Text
-  is_external Boolean @db.Boolean
+  imageUrl String @unique @db.Text
+  isExternal Boolean @db.Boolean
 
   user User?
 
-  posts Images_Posts[]
+  posts ImagesPosts[]
 }
 
 model Post {
   id Int @id @default(autoincrement())
   description String @db.Text
-  created_at DateTime @db.Timestamp
+  createdAt DateTime @db.Timestamp
 
-  images Images_Posts[]
+  images ImagesPosts[]
 
-  user User @relation(fields: [user_id], references: [id])
-  user_id Int
+  user User @relation(fields: [userId], references: [id])
+  userId Int
 
-  likedUsers Users_Liked_Posts[]
+  likedUsers UsersLikedPosts[]
 
   comments Comment[]
 }
 
-model Images_Posts {
-  image Image @relation(fields: [image_id], references: [id])
-  image_id Int
-  post Post @relation(fields: [post_id], references: [id])
-  post_id Int
+model ImagesPosts {
+  image Image @relation(fields: [imageId], references: [id])
+  imageId Int
+  post Post @relation(fields: [postId], references: [id])
+  postId Int
 
-  @@id([image_id, post_id])
+  @@id([imageId, postId])
 }
 
-model Users_Liked_Posts {
-  user User @relation(fields: [user_id], references: [id])
-  user_id Int
-  post Post @relation(fields: [post_id], references: [id])
-  post_id Int
+model UsersLikedPosts {
+  user User @relation(fields: [userId], references: [id])
+  userId Int
+  post Post @relation(fields: [postId], references: [id])
+  postId Int
 
-  @@id([user_id, post_id])
+  @@id([userId, postId])
 }
 
 model Comment {
   id Int @id @default(autoincrement())
   text String @db.Text
-  created_at DateTime @db.Timestamp
+  createdAt DateTime @db.Timestamp
 
-  user User @relation(fields: [user_id], references: [id])
-  user_id Int
+  user User @relation(fields: [userId], references: [id])
+  userId Int
 
-  post Post @relation(fields: [post_id], references: [id])
-  post_id Int
+  post Post @relation(fields: [postId], references: [id])
+  postId Int
 }
