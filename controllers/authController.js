@@ -1,13 +1,7 @@
-const { validationResult } = require('express-validator');
 const authService = require('../services/authService');
 
 const register = async (req, res) => {
     try {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json(errors.array());
-        }
-
         const { accessToken, refreshToken } = await authService.register(req.body);
 
         res.json({ accessToken, refreshToken });
