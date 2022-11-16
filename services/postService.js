@@ -16,4 +16,24 @@ const createPost = async (body, userId) => {
     return post;
 };
 
-module.exports = { createPost };
+const getPost = async (id) => {
+    const post = await postRepository.getPost(id);
+
+    if (!post) {
+        throw new Error('Post not found');
+    }
+
+    return post;
+};
+
+const getCurrentUserPosts = async (userId) => {
+    const posts = await postRepository.getCurrentUserPosts(userId);
+
+    if (!posts) {
+        throw new Error('Posts not found');
+    }
+
+    return posts;
+};
+
+module.exports = { createPost, getPost, getCurrentUserPosts };

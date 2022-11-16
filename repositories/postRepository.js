@@ -6,4 +6,20 @@ const createPost = async (data) => {
     return post = await prisma.post.create({ data });
 };
 
-module.exports = { createPost };
+const getPost = async (id) => {
+    return post = await prisma.post.findUnique({
+        where: {
+            id: +id,
+        }
+    });
+};
+
+const getCurrentUserPosts = async (userId) => {
+    return posts = await prisma.post.findMany({
+        where: {
+            userId: +userId,
+        }
+    });
+};
+
+module.exports = { createPost, getPost, getCurrentUserPosts };
