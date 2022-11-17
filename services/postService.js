@@ -36,4 +36,24 @@ const getCurrentUserPosts = async (userId) => {
     return posts;
 };
 
-module.exports = { createPost, getPost, getCurrentUserPosts };
+const updatePost = async (body, userId, postId) => {
+    const post = await postRepository.getPost(postId);
+
+    if(post.userId !== userId) {
+        throw new Error('Access denied');
+    }
+
+    const data = {
+        description: body.description
+    };
+
+    const updatePost = await postRepository.updatePost(postId, data);
+
+    if (!updatePost) {
+        throw new Error('Post update failed');
+    }
+
+    return updatePost;
+};
+
+module.exports = { createPost, getPost, getCurrentUserPosts, updatePost };

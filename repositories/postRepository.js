@@ -22,4 +22,11 @@ const getCurrentUserPosts = async (userId) => {
     });
 };
 
-module.exports = { createPost, getPost, getCurrentUserPosts };
+const updatePost = async (id, data) => {
+    return post = await prisma.post.update({
+        where: { id: +id, },
+        data
+    });
+};
+
+module.exports = { createPost, getPost, getCurrentUserPosts, updatePost };

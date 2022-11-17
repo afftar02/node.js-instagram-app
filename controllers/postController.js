@@ -39,4 +39,17 @@ const getCurrentUserPosts = async (req, res) => {
     }
 };
 
-module.exports = { createPost, getPost, getCurrentUserPosts };
+const updatePost = async (req, res) => {
+    try {
+        const updatePost = await postService.updatePost(req.body, req.userId, req.params.id);
+
+        res.json(updatePost);
+    } catch (err) {
+        console.log(err);
+        res.status(401).json({
+            message: 'Access denied',
+        });
+    }
+};
+
+module.exports = { createPost, getPost, getCurrentUserPosts, updatePost };
