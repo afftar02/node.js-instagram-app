@@ -16,4 +16,10 @@ const getLikesAmount = async (postId) => {
     return likes.length;
 };
 
-module.exports = { addLike, getLikesAmount };
+const removeLike = async (data) => {
+    await prisma.usersLikedPosts.deleteMany({
+        where: { ...data },
+    });
+};
+
+module.exports = { addLike, getLikesAmount, removeLike };

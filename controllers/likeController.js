@@ -13,4 +13,17 @@ const addLike = async (req, res) => {
     }
 };
 
-module.exports = { addLike };
+const removeLike = async (req, res) => {
+    try {
+        const likesAmount = await likeService.removeLike(req.userId, req.params.postId);
+
+        res.json(likesAmount);
+    } catch (err) {
+        console.log(err);
+        res.status(401).json({
+            message: 'Access denied',
+        });
+    }
+};
+
+module.exports = { addLike, removeLike };

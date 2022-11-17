@@ -1,4 +1,5 @@
 const postRepository = require('../repositories/postRepository');
+const likeService = require('./likeService');
 
 const createPost = async (body, userId) => {
     const data = {
@@ -23,6 +24,8 @@ const getPost = async (id) => {
         throw new Error('Post not found');
     }
 
+    post.likesAmount = await likeService.getLikesAmount(id);
+
     return post;
 };
 
@@ -33,13 +36,17 @@ const getUserPosts = async (userId) => {
         throw new Error('Posts not found');
     }
 
+    for(const post of posts) {
+        post.likesAmount = await likeService.getLikesAmount(post.id)
+    }
+
     return posts;
 };
 
 const updatePost = async (body, userId, postId) => {
     const post = await postRepository.getPost(postId);
 
-    if(post.userId !== userId) {
+    if (post.userId !== userId) {
         throw new Error('Access denied');
     }
 
@@ -53,13 +60,15 @@ const updatePost = async (body, userId, postId) => {
         throw new Error('Post update failed');
     }
 
+    updatePost.likesAmount = await likeService.getLikesAmount(postId);
+
     return updatePost;
 };
 
 const deletePost = async (userId, postId) => {
     const post = await postRepository.getPost(postId);
 
-    if(post.userId !== userId) {
+    if (post.userId !== userId) {
         throw new Error('Access denied');
     }
 
