@@ -52,4 +52,17 @@ const updatePost = async (req, res) => {
     }
 };
 
-module.exports = { createPost, getPost, getCurrentUserPosts, updatePost };
+const deletePost = async (req, res) => {
+    try {
+        const deletePost = await postService.deletePost(req.userId, req.params.id);
+
+        res.json(deletePost);
+    } catch (err) {
+        console.log(err);
+        res.status(401).json({
+            message: 'Access denied',
+        });
+    }
+};
+
+module.exports = { createPost, getPost, getCurrentUserPosts, updatePost, deletePost };

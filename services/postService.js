@@ -56,4 +56,20 @@ const updatePost = async (body, userId, postId) => {
     return updatePost;
 };
 
-module.exports = { createPost, getPost, getCurrentUserPosts, updatePost };
+const deletePost = async (userId, postId) => {
+    const post = await postRepository.getPost(postId);
+
+    if(post.userId !== userId) {
+        throw new Error('Access denied');
+    }
+
+    const deletePost = await postRepository.deletePost(postId);
+
+    if (!deletePost) {
+        throw new Error('Post delete failed');
+    }
+
+    return deletePost;
+};
+
+module.exports = { createPost, getPost, getCurrentUserPosts, updatePost, deletePost };
