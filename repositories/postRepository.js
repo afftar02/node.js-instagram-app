@@ -14,7 +14,7 @@ const getPost = async (id) => {
     });
 };
 
-const getCurrentUserPosts = async (userId) => {
+const getUserPosts = async (userId) => {
     return posts = await prisma.post.findMany({
         where: {
             userId: +userId,
@@ -35,4 +35,4 @@ const deletePost = async (id) => {
     });
 };
 
-module.exports = { createPost, getPost, getCurrentUserPosts, updatePost, deletePost };
+module.exports = { createPost, getPost, getUserPosts, updatePost, deletePost };

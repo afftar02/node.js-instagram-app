@@ -28,13 +28,26 @@ const getPost = async (req, res) => {
 
 const getCurrentUserPosts = async (req, res) => {
     try {
-        const posts = await postService.getCurrentUserPosts(req.userId);
+        const posts = await postService.getUserPosts(req.userId);
 
         res.json(posts);
     } catch (err) {
         console.log(err);
         res.status(401).json({
             message: 'Access denied',
+        });
+    }
+};
+
+const getUserPosts = async (req, res) => {
+    try {
+        const posts = await postService.getUserPosts(req.params.userId);
+
+        res.json(posts);
+    } catch (err) {
+        console.log(err);
+        res.status(404).json({
+            message: 'User not found',
         });
     }
 };
@@ -65,4 +78,4 @@ const deletePost = async (req, res) => {
     }
 };
 
-module.exports = { createPost, getPost, getCurrentUserPosts, updatePost, deletePost };
+module.exports = { createPost, getPost, getCurrentUserPosts, getUserPosts, updatePost, deletePost };
