@@ -3,6 +3,7 @@ const checkAuth = require('../middlewares/checkAuth');
 const postController = require('../controllers/postController');
 
 router.post('/', checkAuth, postController.createPost);
+router.get('/all', checkAuth, postController.getAllPosts);
 router.get('/:id', checkAuth, postController.getPost);
 router.get('/', checkAuth, postController.getCurrentUserPosts);
 router.get('/user/:userId', checkAuth, postController.getUserPosts);

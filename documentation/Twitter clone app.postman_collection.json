@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\":\"stets119@gmail.com\",\r\n    \"password\":\"5208381\"\r\n}",
+							"raw": "{\r\n    \"email\":\"Holland@gmail.com\",\r\n    \"password\":\"12345678\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -262,7 +262,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDAsImlhdCI6MTY2ODYyMTYyMiwiZXhwIjoxNjY5MjI2NDIyfQ.AI5WHcTiDAWh0y9vzgqxlpRZlTvFAIBVokxlihvaO2I",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDEsImlhdCI6MTY2ODc4NDg4NiwiZXhwIjoxNjY5Mzg5Njg2fQ.4EVZav49_hakFza79PyajnPS3oPvTxiDo7o927LPppI",
 								"type": "text"
 							}
 						],
@@ -277,6 +277,33 @@
 								"api",
 								"post",
 								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all posts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDEsImlhdCI6MTY2ODc4NDg4NiwiZXhwIjoxNjY5Mzg5Njg2fQ.4EVZav49_hakFza79PyajnPS3oPvTxiDo7o927LPppI",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:4444/api/post/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4444",
+							"path": [
+								"api",
+								"post",
+								"all"
 							]
 						}
 					},
@@ -315,7 +342,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDAsImlhdCI6MTY2ODYyMTYyMiwiZXhwIjoxNjY5MjI2NDIyfQ.AI5WHcTiDAWh0y9vzgqxlpRZlTvFAIBVokxlihvaO2I",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDEsImlhdCI6MTY2ODc4NDg4NiwiZXhwIjoxNjY5Mzg5Njg2fQ.4EVZav49_hakFza79PyajnPS3oPvTxiDo7o927LPppI",
 								"type": "text"
 							}
 						],

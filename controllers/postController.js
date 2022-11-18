@@ -26,6 +26,19 @@ const getPost = async (req, res) => {
     }
 };
 
+const getAllPosts = async (req, res) => {
+    try {
+        const posts = await postService.getAllPosts(req.userId);
+
+        res.json(posts);
+    } catch (err) {
+        console.log(err);
+        res.status(401).json({
+            message: 'Access denied',
+        });
+    }
+};
+
 const getCurrentUserPosts = async (req, res) => {
     try {
         const posts = await postService.getCurrentUserPosts(req.userId);
@@ -78,4 +91,4 @@ const deletePost = async (req, res) => {
     }
 };
 
-module.exports = { createPost, getPost, getCurrentUserPosts, getUserPosts, updatePost, deletePost };
+module.exports = { createPost, getPost, getAllPosts, getCurrentUserPosts, getUserPosts, updatePost, deletePost };

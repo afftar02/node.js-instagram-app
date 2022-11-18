@@ -43,6 +43,42 @@ const getPost = async (id, userId) => {
     return post;
 };
 
+const getAllPosts = async (userId) => {
+    const posts = await prisma.post.findMany({
+        include: {
+            user: {
+                include: {
+                    avatar: true
+                },
+            },
+            images: true,
+        },
+    });
+
+    for (const post of posts) {
+        post.likesAmount = await prisma.usersLikedPosts.count({
+            where: {
+                postId: post.id,
+            },
+        });
+
+        const isLiked = await prisma.usersLikedPosts.findFirst({
+            where: {
+                postId: post.id,
+                userId: +userId,
+            }
+        });
+    
+        if(isLiked){
+            post.isLiked = true;
+        } else {
+            post.isLiked = false;
+        }
+    }
+
+    return posts;
+};
+
 const getUserPosts = async (userId, currentUserId) => {
     const posts = await prisma.post.findMany({
         where: {
@@ -138,4 +174,4 @@ const deletePost = async (id) => {
     });
 };
 
-module.exports = { createPost, getPost, getUserPosts, getCurrentUserPosts, updatePost, deletePost };
+module.exports = { createPost, getPost, getAllPosts, getUserPosts, getCurrentUserPosts, updatePost, deletePost };

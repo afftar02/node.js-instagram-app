@@ -26,6 +26,12 @@ const getPost = async (id, userId) => {
     return post;
 };
 
+const getAllPosts = async (userId) => {
+    const posts = await postRepository.getAllPosts(userId);
+
+    return posts;
+};
+
 const getCurrentUserPosts = async (userId) => {
     const posts = await postRepository.getCurrentUserPosts(userId);
 
@@ -82,4 +88,4 @@ const deletePost = async (userId, postId) => {
     return deletePost;
 };
 
-module.exports = { createPost, getPost, getCurrentUserPosts, getUserPosts, updatePost, deletePost };
+module.exports = { createPost, getPost, getAllPosts, getCurrentUserPosts, getUserPosts, updatePost, deletePost };
