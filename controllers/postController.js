@@ -15,7 +15,7 @@ const createPost = async (req, res) => {
 
 const getPost = async (req, res) => {
     try {
-        const post = await postService.getPost(req.params.id);
+        const post = await postService.getPost(req.params.id, req.userId);
 
         res.json(post);
     } catch (err) {
@@ -28,7 +28,7 @@ const getPost = async (req, res) => {
 
 const getCurrentUserPosts = async (req, res) => {
     try {
-        const posts = await postService.getUserPosts(req.userId);
+        const posts = await postService.getCurrentUserPosts(req.userId);
 
         res.json(posts);
     } catch (err) {
@@ -41,7 +41,7 @@ const getCurrentUserPosts = async (req, res) => {
 
 const getUserPosts = async (req, res) => {
     try {
-        const posts = await postService.getUserPosts(req.params.userId);
+        const posts = await postService.getUserPosts(req.params.userId, req.userId);
 
         res.json(posts);
     } catch (err) {

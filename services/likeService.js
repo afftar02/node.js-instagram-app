@@ -26,10 +26,4 @@ const removeLike = async (userId, postId) => {
     return likesAmount;
 };
 
-const getLikesAmount = async (postId) => {
-    const likesAmount = await likeRepository.getLikesAmount(postId);
-
-    return likesAmount;
-};
-
-module.exports = { addLike, removeLike, getLikesAmount };
+module.exports = { addLike, removeLike };

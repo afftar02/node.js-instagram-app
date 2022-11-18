@@ -1,5 +1,4 @@
 const postRepository = require('../repositories/postRepository');
-const likeService = require('./likeService');
 
 const createPost = async (body, userId) => {
     const data = {
@@ -17,27 +16,31 @@ const createPost = async (body, userId) => {
     return post;
 };
 
-const getPost = async (id) => {
-    const post = await postRepository.getPost(id);
+const getPost = async (id, userId) => {
+    const post = await postRepository.getPost(id, userId);
 
     if (!post) {
         throw new Error('Post not found');
     }
 
-    post.likesAmount = await likeService.getLikesAmount(id);
-
     return post;
 };
 
-const getUserPosts = async (userId) => {
-    const posts = await postRepository.getUserPosts(userId);
+const getCurrentUserPosts = async (userId) => {
+    const posts = await postRepository.getCurrentUserPosts(userId);
 
     if (!posts) {
         throw new Error('Posts not found');
     }
 
-    for(const post of posts) {
-        post.likesAmount = await likeService.getLikesAmount(post.id)
+    return posts;
+};
+
+const getUserPosts = async (userId, currentUserId) => {
+    const posts = await postRepository.getUserPosts(userId, currentUserId);
+
+    if (!posts) {
+        throw new Error('Posts not found');
     }
 
     return posts;
@@ -60,8 +63,6 @@ const updatePost = async (body, userId, postId) => {
         throw new Error('Post update failed');
     }
 
-    updatePost.likesAmount = await likeService.getLikesAmount(postId);
-
     return updatePost;
 };
 
@@ -81,4 +82,4 @@ const deletePost = async (userId, postId) => {
     return deletePost;
 };
 
-module.exports = { createPost, getPost, getUserPosts, updatePost, deletePost };
+module.exports = { createPost, getPost, getCurrentUserPosts, getUserPosts, updatePost, deletePost };
