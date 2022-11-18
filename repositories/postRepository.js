@@ -24,14 +24,18 @@ const getUserPosts = async (userId) => {
 
 const updatePost = async (id, data) => {
     return post = await prisma.post.update({
-        where: { id: +id, },
+        where: {
+            id: +id,
+        },
         data
     });
 };
 
 const deletePost = async (id) => {
     return post = await prisma.post.delete({
-        where: { id: +id, },
+        where: {
+            id: +id,
+        },
     });
 };
 

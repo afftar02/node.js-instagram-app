@@ -12,7 +12,9 @@ const checkAuth = (req, res, next) => {
 
         next();
     } catch (err) {
-        return res.status(401);
+        return res.status(401).json({
+            message: 'Invalid token',
+        });
     }
 }
 
