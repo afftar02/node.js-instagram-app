@@ -11,6 +11,9 @@ const findUserByEmail = async (email) => {
         where: {
             email: email,
         },
+        include: {
+            avatar: true,
+        }
     });
 };
 
@@ -18,6 +21,9 @@ const findUserById = async (id) => {
     return user = await prisma.user.findUnique({
         where: {
             id: +id,
+        },
+        include: {
+            avatar: true,
         }
     });
 };
