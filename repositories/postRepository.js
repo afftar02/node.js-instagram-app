@@ -40,6 +40,12 @@ const getPost = async (id, userId) => {
         post.isLiked = false;
     }
 
+    post.commentsAmount = await prisma.comment.count({
+        where: {
+            postId: +id,
+        },
+    });
+
     return post;
 };
 
@@ -74,6 +80,12 @@ const getAllPosts = async (userId) => {
         } else {
             post.isLiked = false;
         }
+
+        post.commentsAmount = await prisma.comment.count({
+            where: {
+                postId: post.id,
+            },
+        });
     }
 
     return posts;
@@ -113,6 +125,12 @@ const getUserPosts = async (userId, currentUserId) => {
         } else {
             post.isLiked = false;
         }
+
+        post.commentsAmount = await prisma.comment.count({
+            where: {
+                postId: post.id,
+            },
+        });
     }
 
     return posts;
@@ -152,6 +170,12 @@ const getCurrentUserPosts = async (userId) => {
         } else {
             post.isLiked = false;
         }
+
+        post.commentsAmount = await prisma.comment.count({
+            where: {
+                postId: post.id,
+            },
+        });
     }
 
     return posts;
