@@ -310,32 +310,6 @@
 					"response": []
 				},
 				{
-					"name": "Get current user posts",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDAsImlhdCI6MTY2ODYyMTYyMiwiZXhwIjoxNjY5MjI2NDIyfQ.AI5WHcTiDAWh0y9vzgqxlpRZlTvFAIBVokxlihvaO2I",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://localhost:4444/api/post",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "4444",
-							"path": [
-								"api",
-								"post"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Get user posts",
 					"request": {
 						"method": "GET",
@@ -503,7 +477,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"text\":\"First comment\"\r\n}",
+							"raw": "{\r\n    \"text\":\"Second comment for post with id 3\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"

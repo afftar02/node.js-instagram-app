@@ -32,16 +32,6 @@ const getAllPosts = async (userId) => {
     return posts;
 };
 
-const getCurrentUserPosts = async (userId) => {
-    const posts = await postRepository.getCurrentUserPosts(userId);
-
-    if (!posts) {
-        throw new Error('Posts not found');
-    }
-
-    return posts;
-};
-
 const getUserPosts = async (userId, currentUserId) => {
     const posts = await postRepository.getUserPosts(userId, currentUserId);
 
@@ -88,4 +78,4 @@ const deletePost = async (userId, postId) => {
     return deletePost;
 };
 
-module.exports = { createPost, getPost, getAllPosts, getCurrentUserPosts, getUserPosts, updatePost, deletePost };
+module.exports = { createPost, getPost, getAllPosts, getUserPosts, updatePost, deletePost };
