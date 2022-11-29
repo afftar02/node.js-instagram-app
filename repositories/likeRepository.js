@@ -12,4 +12,12 @@ const removeLike = async (data) => {
     });
 };
 
-module.exports = { addLike, removeLike };
+const getLikesAmount = async (postId) => {
+    return likesAmount = await prisma.usersLikedPosts.count({
+        where: {
+            postId: +postId,
+        },
+    });
+};
+
+module.exports = { addLike, removeLike, getLikesAmount };
