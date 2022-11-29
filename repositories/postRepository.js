@@ -34,7 +34,7 @@ const getPost = async (id, userId) => {
         }
     });
 
-    if(isLiked){
+    if (isLiked) {
         post.isLiked = true;
     } else {
         post.isLiked = false;
@@ -51,6 +51,9 @@ const getPost = async (id, userId) => {
 
 const getAllPosts = async (userId) => {
     const posts = await prisma.post.findMany({
+        orderBy: {
+            createdAt: 'desc',
+        },
         include: {
             user: {
                 include: {
@@ -74,8 +77,8 @@ const getAllPosts = async (userId) => {
                 userId: +userId,
             }
         });
-    
-        if(isLiked){
+
+        if (isLiked) {
             post.isLiked = true;
         } else {
             post.isLiked = false;
@@ -93,6 +96,9 @@ const getAllPosts = async (userId) => {
 
 const getUserPosts = async (userId, currentUserId) => {
     const posts = await prisma.post.findMany({
+        orderBy: {
+            createdAt: 'desc',
+        },
         where: {
             userId: +userId,
         },
@@ -119,8 +125,8 @@ const getUserPosts = async (userId, currentUserId) => {
                 userId: +currentUserId,
             }
         });
-    
-        if(isLiked){
+
+        if (isLiked) {
             post.isLiked = true;
         } else {
             post.isLiked = false;
