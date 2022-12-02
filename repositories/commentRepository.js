@@ -8,6 +8,9 @@ const createComment = async (data) => {
 
 const getPostComments = async (postId) => {
     return comments = await prisma.comment.findMany({
+        orderBy: {
+            createdAt: 'desc',
+        },
         where: {
             postId: +postId,
         },
